@@ -19,20 +19,35 @@ func getvolume(data []byte, count int) float64{
 	return val
 }
 
+func loadavg() (float64, float64, float64){
+	file, _ := os.Open("/proc/loadavg")
+	data, _ := io.ReadAll(file)
+	fields := strings.Fields(string(data))
+
+	loadavgOne, _ := strconv.ParseFloat(fields[0], 64)
+	loadavgFive, _ := strconv.ParseFloat(fields[1], 64)
+	loadavgFifteen, _ := strconv.ParseFloat(fields[2], 64)
+
+
+	return loadavgOne, loadavgFive, loadavgFifteen
+}
+
 func uptime(){
+
 	file, _ := os.Open("/proc/uptime")
 	data, _ := io.ReadAll(file)
 	fields := strings.Fields(string(data))
 	uptimeSec, _ := strconv.ParseFloat(fields[0], 64)
 
-	
 	var days, hours, minutes int
 
 	days = int(uptimeSec) / 86400
 	hours = (int(uptimeSec) % 86400) / 3600
 	minutes = (int(uptimeSec) % 3600) / 60
 
-	fmt.Printf("top - %8s up %d days, %2d:%2d \n",time.Now().Format("15:04:05"),  days, hours, minutes)
+	loadavgOne, loadavgFive, loadavgFifteen := loadavg()
+
+	fmt.Printf("top - %8s up %d days, %2d:%2d 2 users, load average: %.2f %.2f %.2f\n",time.Now().Format("15:04:05"),  days, hours, minutes, loadavgOne, loadavgFive, loadavgFifteen)
 	
 }
 
