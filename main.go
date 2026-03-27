@@ -6,6 +6,7 @@ import (
 	"os"
 	"strings"
 	"strconv"
+	"time"
 )
 
 func getvolume(data []byte, count int) float64{
@@ -18,6 +19,22 @@ func getvolume(data []byte, count int) float64{
 	return val
 }
 
+func uptime(){
+	file, _ := os.Open("/proc/uptime")
+	data, _ := io.ReadAll(file)
+	fields := strings.Fields(string(data))
+	uptimeSec, _ := strconv.ParseFloat(fields[0], 64)
+
+	
+	var days, hours, minutes int
+
+	days = int(uptimeSec) / 86400
+	hours = (int(uptimeSec) % 86400) / 3600
+	minutes = (int(uptimeSec) % 3600) / 60
+
+	fmt.Printf("top - %8s up %d days, %2d:%2d \n",time.Now().Format("15:04:05"),  days, hours, minutes)
+	
+}
 
 func meminfo() {
 	file, _ := os.Open("/proc/meminfo")
@@ -43,5 +60,6 @@ func meminfo() {
 
 
 func main() {
-	meminfo()
+	uptime()
+  meminfo()
 }
