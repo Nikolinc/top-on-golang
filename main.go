@@ -23,23 +23,22 @@ func meminfo() {
 	file, _ := os.Open("/proc/meminfo")
 	data, _ := io.ReadAll(file)
 
-	var total, used, free, shared, buffcache, available float64
+	var total, used, free, buffcache, available float64
+	var swaptotal, swapfree, swapused float64
+
 
 	total = getvolume(data, 0)/1024
 	free = getvolume(data, 1)/1024
 	available = getvolume(data, 2)/1024
 	used = total - available
-	shared = getvolume(data, 20)/1024
 	buffcache = getvolume(data, 3)/1024 + getvolume(data, 4)/1024
 
-
-
-	fmt.Printf("total: %.0f MB\n", total)
-	fmt.Printf("used: %.0f MB\n", used)
-	fmt.Printf("free: %.0f MB\n", free)
-	fmt.Printf("available: %.0f MB\n", available)
-	fmt.Printf("shared: %.0f MB\n", shared)
-	fmt.Printf("buff/cache: %.0f MB\n", buffcache)
+	swaptotal = getvolume(data, 14)/1024
+	swapfree = getvolume(data, 15)/1024
+	swapused =  swaptotal - swapfree
+ 
+	fmt.Printf("MiB Mem : %8.0f total %8.0f free %8.0f used %8.0f buff/cache \n", total, free, used, buffcache)
+	fmt.Printf("MiB Swap: %8.0f total %8.0f free %8.0f used %8.0f avail Mem \n",swaptotal, swapfree, swapused, available )
 }
 
 
