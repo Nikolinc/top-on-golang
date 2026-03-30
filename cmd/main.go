@@ -21,6 +21,7 @@ func getvolume(data []byte, count int) float64{
 
 func loadavg() (float64, float64, float64){
 	file, _ := os.Open("/proc/loadavg")
+	defer file.Close()
 	data, _ := io.ReadAll(file)
 	fields := strings.Fields(string(data))
 
@@ -35,6 +36,7 @@ func loadavg() (float64, float64, float64){
 func uptime(){
 
 	file, _ := os.Open("/proc/uptime")
+	defer file.Close()
 	data, _ := io.ReadAll(file)
 	fields := strings.Fields(string(data))
 	uptimeSec, _ := strconv.ParseFloat(fields[0], 64)
@@ -53,6 +55,7 @@ func uptime(){
 
 func meminfo() {
 	file, _ := os.Open("/proc/meminfo")
+	defer file.Close()
 	data, _ := io.ReadAll(file)
 
 	var total, used, free, buffcache, available float64
