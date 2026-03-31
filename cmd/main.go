@@ -17,4 +17,5 @@ func main() {
 	ui.ShowTasks(tasks)
 	ui.ShowCPU(cpu)
 	ui.ShowMem(meminfo)
+	ui.Showproceing()
 }
