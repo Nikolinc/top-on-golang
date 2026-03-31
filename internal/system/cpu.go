@@ -37,20 +37,19 @@ func ReadStat() CPUState {
 }
 
 
-func CPU() CPUState{
+func CPU(laststate CPUState) CPUState{
 
-	firshStateCPU := ReadStat()
 	time.Sleep(time.Second)
 	secondStateCPU := ReadStat()
 
-	deltaUser := secondStateCPU.User - firshStateCPU.User
-	deltaNice := secondStateCPU.Nice - firshStateCPU.Nice
-	deltaSystem := secondStateCPU.System - firshStateCPU.System
-	deltaIdle := secondStateCPU.Idle - firshStateCPU.Idle
-	deltaIowait := secondStateCPU.Iowait - firshStateCPU.Iowait
-	deltaIrq := secondStateCPU.Irq - firshStateCPU.Irq
-	deltaSoftirq := secondStateCPU.Softirq - firshStateCPU.Softirq
-	deltaSteal := secondStateCPU.Steal - firshStateCPU.Steal
+	deltaUser := secondStateCPU.User - laststate.User
+	deltaNice := secondStateCPU.Nice - laststate.Nice
+	deltaSystem := secondStateCPU.System - laststate.System
+	deltaIdle := secondStateCPU.Idle - laststate.Idle
+	deltaIowait := secondStateCPU.Iowait - laststate.Iowait
+	deltaIrq := secondStateCPU.Irq - laststate.Irq
+	deltaSoftirq := secondStateCPU.Softirq - laststate.Softirq
+	deltaSteal := secondStateCPU.Steal - laststate.Steal
 
 	total := deltaUser + deltaNice + deltaSystem + deltaIdle +
         deltaIowait + deltaIrq + deltaSoftirq + deltaSteal

@@ -1,21 +1,29 @@
 package main
 
 import (
+	"time"
 	"top-on-golang/internal/system"
 	"top-on-golang/internal/ui"
 )
 
 func main() {
-	var meminfo system.MemStat = system.MemInfo()
-	var loadavg system.LoadavgStat = system.Loadavg()
-	var uptime system.UptimeStat = system.Uptime()
-	var cpu system.CPUState = system.CPU()
-	var tasks system.TasksState 
-	tasks, _ = system.Processing()
 
-	ui.ShowUptime(loadavg, uptime)
-	ui.ShowTasks(tasks)
-	ui.ShowCPU(cpu)
-	ui.ShowMem(meminfo)
-	ui.Showproceing()
+	var laststate system.CPUState = system.ReadStat()
+
+	for {
+		time.Sleep(time.Second) // пауза 1 секунда между обновлениями
+
+		var meminfo system.MemStat = system.MemInfo()
+		var loadavg system.LoadavgStat = system.Loadavg()
+		var uptime system.UptimeStat = system.Uptime()
+		var cpu system.CPUState = system.CPU(laststate)
+		var tasks system.TasksState
+		tasks, _ = system.Processing()
+
+		ui.ShowUptime(loadavg, uptime)
+		ui.ShowTasks(tasks)
+		ui.ShowCPU(cpu)
+		ui.ShowMem(meminfo)
+		ui.ShowProceing()
+	}
 }
