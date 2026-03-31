@@ -17,9 +17,7 @@ type UptimeStat struct {
 
 
 func Loadavg() LoadavgStat {
-	file, _ := os.Open("/proc/loadavg")
-	defer file.Close()
-	data, _ := io.ReadAll(file)
+	data, _ := os.ReadFile("/proc/loadavg")
 	fields := strings.Fields(string(data))
 
 	loadavgOne, _ := strconv.ParseFloat(fields[0], 64)
@@ -32,10 +30,8 @@ func Loadavg() LoadavgStat {
 
 func Uptime()UptimeStat{
 
-	file, _ := os.Open("/proc/uptime")
-	defer file.Close()
-
-	data, _ := io.ReadAll(file)
+	data, _ := os.ReadFile("/proc/uptime")
+	
 	fields := strings.Fields(string(data))
 	uptimeSec, _ := strconv.ParseFloat(fields[0], 64)
 

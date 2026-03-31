@@ -1,7 +1,6 @@
 package system
 
 import (
-	"io"
 	"os"
 	"strings"
 	"strconv"
@@ -14,9 +13,7 @@ type CPUState struct{
 
 func ReadStat() CPUState {
 
-	file, _ := os.Open("/proc/stat")
-	defer file.Close()
-	data, _ := io.ReadAll(file)
+	data, _ := os.ReadFile("/proc/stat")
 	line := strings.Split(string(data), "\n")[0]
 	fields := strings.Fields(line)[1:]
 
@@ -56,7 +53,7 @@ func CPU() CPUState{
 	deltaSteal := secondStateCPU.Steal - firshStateCPU.Steal
 
 	total := deltaUser + deltaNice + deltaSystem + deltaIdle +
-         deltaIowait + deltaIrq + deltaSoftirq + deltaSteal
+        deltaIowait + deltaIrq + deltaSoftirq + deltaSteal
 
 	return CPUState{
 		User:    deltaUser / total * 100,
