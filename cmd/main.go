@@ -20,6 +20,8 @@ func main() {
 		var tasks system.TasksState
 		tasks, _ = system.Processing()
 
+		ui.Clear()
+
 		ui.ShowUptime(loadavg, uptime)
 		ui.ShowTasks(tasks)
 		ui.ShowCPU(cpu)
