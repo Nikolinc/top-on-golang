@@ -1,7 +1,6 @@
 package system
 
 import (
-	"io"
 	"os"
 	"strings"
 	"strconv"
@@ -31,7 +30,7 @@ func Loadavg() LoadavgStat {
 func Uptime()UptimeStat{
 
 	data, _ := os.ReadFile("/proc/uptime")
-	
+
 	fields := strings.Fields(string(data))
 	uptimeSec, _ := strconv.ParseFloat(fields[0], 64)
 
