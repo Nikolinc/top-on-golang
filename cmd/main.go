@@ -11,7 +11,7 @@ func main() {
 	var laststate system.CPUState = system.ReadStat()
 
 	for {
-		time.Sleep(time.Second) // пауза 1 секунда между обновлениями
+		time.Sleep(time.Second)
 
 		var meminfo system.MemStat = system.MemInfo()
 		var loadavg system.LoadavgStat = system.Loadavg()
