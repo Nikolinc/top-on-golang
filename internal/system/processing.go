@@ -3,12 +3,8 @@ package system
 import (
 	"os"
 	"strconv"
-	"strings"
+	"top-on-golang/internal/system/tasks"
 )
-
-type TasksState struct {
-	Total, Running, Sleeping, Stopped, Zombie int16
-}
 
 type ProcessingInitState struct {
 	PID, RES, SHR          int32
@@ -17,11 +13,11 @@ type ProcessingInitState struct {
 	CPU, MEM               float32
 }
 
-func Processing() (TasksState, []ProcessingInitState) {
+func Processing() (tasks.TaskTotalState, []ProcessingInitState) {
 
 	dir, _ := os.ReadDir("/proc")
 
-	var tasks TasksState = TasksState{0, 0, 0, 0, 0}
+	var totalstate tasks.TaskTotalState = tasks.TaskTotalState{0, 0, 0, 0, 0}
 	var list = []ProcessingInitState{}
 
 	for _, e := range dir {
@@ -35,40 +31,23 @@ func Processing() (TasksState, []ProcessingInitState) {
 
 		pid := e.Name()
 
-		tasks = Processingtasks(tasks, pid)
+		totalstate = tasks.TotalState(totalstate, pid)
 		ProcessingItem := ProcessingList(pid)
 		list = append(list, ProcessingItem)
 	}
 
-	return tasks, list
+	return totalstate, list
 }
 
-func Processingtasks(tasks TasksState, pid string) TasksState {
-
-	data, err := os.ReadFile("/proc/" + pid + "/stat")
-	if err != nil {
-		return tasks
-	}
-
-	fields := strings.Fields(string(data))
-	state := fields[2]
-
-	switch state {
-	case "R":
-		tasks.Running += 1
-	case "S", "D":
-		tasks.Sleeping += 1
-	case "T":
-		tasks.Stopped += 1
-	case "Z":
-		tasks.Zombie += 1
-	}
-
-	tasks.Total++
-
-	return tasks
-}
 
 func ProcessingList(pid string) ProcessingInitState {
-	return ProcessingInitState{}
+
+	unit := ProcessingInitState{}
+	pidInt, _ := strconv.ParseInt(pid, 10, 32)
+
+	unit.PID = int32(pidInt)
+	unit.USER = tasks.GetUserFromPID(pid)
+	unit.PR, unit.NI , unit.S = tasks.StatTask(pid)
+
+	return unit
 }
