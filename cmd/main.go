@@ -22,13 +22,13 @@ func main() {
 		var cpu system.CPUState = system.CPU(laststate)
 		var tasks tasks.TaskTotalState
 		var list []system.ProcessingInitState
-		tasks, list = system.Processing()
+		tasks, list = system.Processing(meminfo.Total)
 
-		ui.ShowUptime(loadavg, uptime, 0)
-		ui.ShowTasks(tasks, 1 )
-		ui.ShowCPU(cpu, 2)
-		ui.ShowMem(meminfo, 3)
-		ui.ShowProceing(list,7)
+		ui.ShowUptime(loadavg, uptime, 1)
+		ui.ShowTasks(tasks, 2 )
+		ui.ShowCPU(cpu, 3)
+		ui.ShowMem(meminfo, 4)
+		ui.ShowProceing(list,8)
 
 	}
 }

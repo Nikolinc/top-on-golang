@@ -13,7 +13,7 @@ type ProcessingInitState struct {
 	CPU, MEM               float32
 }
 
-func Processing() (tasks.TaskTotalState, []ProcessingInitState) {
+func Processing(totalMem float32) (tasks.TaskTotalState, []ProcessingInitState) {
 
 	dir, _ := os.ReadDir("/proc")
 
@@ -32,7 +32,7 @@ func Processing() (tasks.TaskTotalState, []ProcessingInitState) {
 		pid := e.Name()
 
 		totalstate = tasks.TotalState(totalstate, pid)
-		ProcessingItem := ProcessingList(pid)
+		ProcessingItem := ProcessingList(pid, totalMem)
 		list = append(list, ProcessingItem)
 	}
 
@@ -40,7 +40,7 @@ func Processing() (tasks.TaskTotalState, []ProcessingInitState) {
 }
 
 
-func ProcessingList(pid string) ProcessingInitState {
+func ProcessingList(pid string, totalMem float32) ProcessingInitState {
 
 	unit := ProcessingInitState{}
 	pidInt, _ := strconv.ParseInt(pid, 10, 32)
@@ -48,6 +48,7 @@ func ProcessingList(pid string) ProcessingInitState {
 	unit.PID = int32(pidInt)
 	unit.USER = tasks.GetUserFromPID(pid)
 	unit.PR, unit.NI , unit.S = tasks.StatTask(pid)
+	unit.VIRT, unit.RES, unit.SHR, unit.MEM = tasks.StatmTask(pid, totalMem)
 
 	return unit
 }

@@ -7,24 +7,24 @@ import (
 )
 
 type MemStat struct {
-	Total, Used, Free, BuffCache, Available, SwapTotal, SwapFree, SwapUsed float64
+	Total, Used, Free, BuffCache, Available, SwapTotal, SwapFree, SwapUsed float32
 }
 
-func GetVolume(data []byte, count int) float64 {
+func GetVolume(data []byte, count int) float32 {
 	line := strings.Split(string(data), "\n")[count]
 	fields := strings.Fields(line)[1:]
 	if len(fields) < 2 {
 		return 0
 	}
-	val, _ := strconv.ParseFloat(fields[0], 64)
-	return val
+	val, _ := strconv.ParseFloat(fields[0], 32)
+	return float32(val)
 }
 
 func MemInfo() MemStat {
 	data, _ := os.ReadFile("/proc/meminfo")
 
-	var total, used, free, buffcache, available float64
-	var swaptotal, swapfree, swapused float64
+	var total, used, free, buffcache, available, 
+  swaptotal, swapfree, swapused float32
 
 	total = GetVolume(data, 0) / 1024
 	free = GetVolume(data, 1) / 1024
